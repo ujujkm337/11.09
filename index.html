@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Память о 11 сентября</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0a0a0a;
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-image: linear-gradient(rgba(10, 10, 10, 0.9), rgba(10, 10, 10, 0.9)), 
+                              url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23111"/><path d="M0 0L100 100M100 0L0 100" stroke="%23222" stroke-width="1"/></svg>');
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 90%;
+            text-align: center;
+            padding: 2rem;
+            background-color: rgba(20, 20, 20, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            border: 1px solid #333;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: #d4af37;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+            letter-spacing: 1px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            color: #aaa;
+            line-height: 1.6;
+        }
+        
+        .counter {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .time-unit {
+            background-color: rgba(30, 30, 30, 0.8);
+            padding: 1.5rem 1rem;
+            border-radius: 8px;
+            border: 1px solid #444;
+            transition: transform 0.3s ease;
+        }
+        
+        .time-unit:hover {
+            transform: translateY(-5px);
+            border-color: #666;
+        }
+        
+        .time-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #e0e0e0;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
+        }
+        
+        .time-label {
+            font-size: 0.9rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .milliseconds {
+            font-size: 1.8rem;
+        }
+        
+        .tribute {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #333;
+            color: #999;
+            font-style: italic;
+            line-height: 1.6;
+        }
+        
+        .date-reference {
+            margin-top: 1rem;
+            color: #777;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .time-value {
+                font-size: 2rem;
+            }
+            
+            .milliseconds {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>11 сентября 2001 года</h1>
+        <p class="subtitle">С момента трагических событий прошло:</p>
+        
+        <div class="counter">
+            <div class="time-unit">
+                <div class="time-value" id="years">0</div>
+                <div class="time-label">Лет</div>
+            </div>
+            <div class="time-unit">
+                <div class="time-value" id="months">0</div>
+                <div class="time-label">Месяцев</div>
+            </div>
+            <div class="time-unit">
+                <div class="time-value" id="days">0</div>
+                <div class="time-label">Дней</div>
+            </div>
+            <div class="time-unit">
+                <div class="time-value" id="hours">0</div>
+                <div class="time-label">Часов</div>
+            </div>
+            <div class="time-unit">
+                <div class="time-value" id="minutes">0</div>
+                <div class="time-label">Минут</div>
+            </div>
+            <div class="time-unit">
+                <div class="time-value" id="seconds">0</div>
+                <div class="time-label">Секунд</div>
+            </div>
+            <div class="time-unit">
+                <div class="time-value milliseconds" id="milliseconds">0</div>
+                <div class="time-label">Миллисекунд</div>
+            </div>
+        </div>
+        
+        <p class="date-reference">Отсчёт ведётся с 8:46 утра 11 сентября 2001 года<br>(момент столкновения первого самолёта с Северной башней ВТЦ)</p>
+        
+        <div class="tribute">
+            Мы помним тех, кто погиб в этот трагический день.<br>
+            Вечная память жертвам терактов 11 сентября.
+        </div>
+    </div>
+
+    <script>
+        // Устанавливаем дату события - 11 сентября 2001 года, 8:46 утра (EDT)
+        // UTC-4 (летнее время), что соответствует 12:46 UTC
+        const eventDate = new Date(Date.UTC(2001, 8, 11, 12, 46, 0, 0));
+        
+        function updateCounter() {
+            const now = new Date();
+            const diff = now - eventDate;
+            
+            // Вычисляем составляющие времени
+            const milliseconds = diff % 1000;
+            const seconds = Math.floor(diff / 1000) % 60;
+            const minutes = Math.floor(diff / (1000 * 60)) % 60;
+            const hours = Math.floor(diff / (1000 * 60 * 60)) % 24;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            
+            // Вычисляем годы и месяцы
+            const startYear = eventDate.getFullYear();
+            const currentYear = now.getFullYear();
+            let years = currentYear - startYear;
+            
+            // Корректируем годы и месяцы
+            const eventMonth = eventDate.getMonth();
+            const currentMonth = now.getMonth();
+            let months = currentMonth - eventMonth;
+            
+            if (months < 0) {
+                years--;
+                months += 12;
+            }
+            
+            // Обновляем отображение
+            document.getElementById('years').textContent = years;
+            document.getElementById('months').textContent = months;
+            document.getElementById('days').textContent = days;
+            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+            document.getElementById('milliseconds').textContent = milliseconds.toString().padStart(3, '0');
+        }
+        
+        // Обновляем счётчик каждую миллисекунду
+        setInterval(updateCounter, 1);
+        updateCounter(); // Инициализация
+    </script>
+</body>
+</html>
